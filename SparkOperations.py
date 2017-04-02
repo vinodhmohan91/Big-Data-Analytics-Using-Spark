@@ -72,6 +72,85 @@ cleanedData.collect()
 
 #<--------------Actions----------------->
 
+#Reduce - compute the sum
+collData.reduce(lambda x,y: x+y)        
+
+#Finding the longest line
+autoData.reduce(lambda x,y: x if len(x)>len(y) else y) 
+
+#Find the average MPFG-City for all cars
+def getMPG(autoStr):
+    if isinstance(autoStr,int):
+        return autoStr
+    autoAtt = autoStr.split(",")
+    if autoAtt[9].isdigit():
+        return int(autoAtt[9])
+    else:
+        return 0
+
+#Average MPG-City
+autoData.reduce(lambda x,y: getMPG(x)+getMPG(y)) / (autoData.count()-1)
+
+#<--------------Key-Value RDDs-------------->
+#Defining a Key-Value RDD
+HPData = autoData.map(lambda x: (x.split(",")[0],x.split(",")[7]))
+HPData.collect()
+
+#Getting the keys alone
+HPData.keys().distinct().collect()
+
+#Removing the Header
+header = HPData.first()
+HPData1 = HPData.filter(lambda x: x!=header)
+
+#Adding one to calculate the average for each key (MAKE)
+HPData2 = HPData1.mapValues(lambda x: (x,1))
+HPData2.collect()
+
+#Finding the aggregate(sum) of values
+HPData3 = HPData2.reduceByKey(lambda x,y: (int(x[0])+int(y[0]), x[1]+y[1]))
+HPData3.collect()
+
+#Finding the average HP summarized by Make
+HPDataSummary = HPData3.mapValues(lambda x: int(x[0])/int(x[1]))
+HPDataSummary.collect()
+
+#<-----Broadcasting, Accumulation, Persistence and Patritioning----->
+
+#Defining Accumulator variables
+sedanCount = SpContext.accumulator(0)
+hatchCount = SpContext.accumulator(0)
+
+#Defining broadcast variables
+sedanText = SpContext.broadcast("sedan")
+hatchText = SpContext.broadcast("hatchback")
+
+#Function to count the sedan, hatchback using broadcast variables and also split lines
+def splitlines(line):
+    global sedanCount
+    global hatchCount
+    
+    if sedanText.value in line:
+        sedanCount += 1
+    if hatchText.value in line:
+        hatchCount += 1
         
-        
-        
+    return line.split(",")
+
+#Map
+splitData = autoData.map(splitlines)
+
+#Lazy execution
+splitData.count()
+print(sedanCount,hatchCount)
+
+#Partition
+collData.getNumPartitions()
+
+collData = SpContext.parallelize([3,4,5,6,5],4) #Partition into 4
+collData.cache() #Persistence - caching
+collData.count()
+
+collData.getNumPartitions()    
+    
+         
