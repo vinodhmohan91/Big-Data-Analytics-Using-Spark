@@ -15,3 +15,7 @@ irisDF.show()
 
 #Filter rows whose petal width is > 0.4
 irisDF.filter(irisDF["PetalWidth"] > 0.4).count()
+
+#Creating a Temp table iris and finding average petal width by species
+irisDF.createOrReplaceTempView("iris")
+SpSession.sql("Select Species, avg(PetalWidth) from iris group by Species").show()

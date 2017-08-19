@@ -14,6 +14,7 @@ sys.path.insert(0,os.path.join(SPARK_HOME,"python"))
 sys.path.insert(0,os.path.join(SPARK_HOME,"python","lib"))
 sys.path.insert(0,os.path.join(SPARK_HOME,"python","lib","pyspark.zip"))
 sys.path.insert(0,os.path.join(SPARK_HOME,"python","lib","py4j-0.10.1-src.zip"))
+sys.path.insert(0,os.path.join(SPARK_HOME,"jars"))
 
 #Intialize Spark Session and SparkContext
 from pyspark.sql import SparkSession

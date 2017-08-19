@@ -42,3 +42,30 @@ autoDF.show()
 #Creating a data frame from csv directly
 autoDF1 = SpSession.read.csv("./Data/auto-data.csv",header=True)
 autoDF1.show()
+
+
+#Creating a Temp table / view
+autoDF.createOrReplaceTempView("autoTable")
+SpSession.sql("Select * from autoTable where hp > 200").show()
+
+empDF.createOrReplaceTempView("empTable")
+SpSession.sql("Select * from empTable where salary > 4000").show()
+
+
+# Spark DF To Pandas DF
+empPdDF = empDF.toPandas()
+for index, row in empPdDF.iterrows():
+    print (row["salary"])
+    
+
+# Connecting to SQL Database
+DF = SpSession.read.format("jdbc").options(
+        url = "jdbc:oracle:thin:@sb1-opimdb-1.business.uconn.edu:1521:d2",
+        driver = "oracle.jdbc.OracleDriver",
+        dbtable = "EMPLOYEES",
+        user="vim15106",
+        password="Dhoniv@19").load()
+
+DF.show()
+DF.select("JOB_ID").distinct().show()
+
