@@ -8,7 +8,7 @@ autoData.take(5)
 # Remove the Header
 autoData1 = autoData.filter(lambda line: "MPG" not in line)
 
-# Cleaning the Data andn creating a data frame
+# Cleaning the Data and creating a data frame
 from  pyspark.sql import Row
 
 # Setting a default value for HorsePower variable
