@@ -57,7 +57,7 @@ irisDF2.show(5)
 # Perform Machine Learning
 
 #Split into training and test dataset
-(trainingData, testData) = irisDF2.randomSplit([0.9,0.1])
+(trainingData, testData) = irisDF2.randomSplit([0.75,0.25])
 trainingData.count()
 testData.count()
 
@@ -82,9 +82,6 @@ evaluator.evaluate(predictions)
 
 # Draw a confusion matrix
 predictions.groupby("label","prediction").count().show()
-
-
-
 
 
 
