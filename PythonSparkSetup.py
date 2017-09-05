@@ -23,7 +23,7 @@ from pyspark import SparkContext
 #Create a Spark Session
 SpSession = SparkSession \
     .builder \
-    .master("local") \
+    .master("local[2]") \
     .appName("First Session") \
     .config("spark.executor.memory","1g") \
     .config("spark.cores.max","2") \
@@ -36,4 +36,4 @@ SpContext = SpSession.sparkContext
 #Test Spark
 testData = SpContext.parallelize([3,6,4,2])
 testData.count()
-
+    
